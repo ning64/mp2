@@ -129,14 +129,14 @@ def evaluate_r_hscore(d_board,d_size):
 	h_score=10*d_con_score+3*p_con_score+emp_score
 	return h_score
 
-def make_r_move(d_fboard,d_size,d_available_pos_1):
+def make_r_move(d_board,d_size,d_available_pos):
 	tree={}
-	for d_pos1 in d_available_pos_1:
+	for d_pos1 in d_available_pos:
 		#make_move & update board
-		m1_d_board=d_fboard[:]
+		m1_d_board=d_board[:]
 		m1_d_board[d_pos1[0]][d_pos1[1]]=VALUE_RED
 		#create second movable list
-		d_available_pos_2=d_available_pos_1[:]
+		d_available_pos_2=d_available_pos[:]
 		d_available_pos_2.remove(d_pos1)
 		score_list=[]
 		for d_pos2 in d_available_pos_2:
@@ -148,7 +148,7 @@ def make_r_move(d_fboard,d_size,d_available_pos_1):
 		#do min
 		tree[pos_to_inp(d_pos1, d_size)]=min(score_list)
 	#do max
-	move=inp_to_pos(max(tree.iteritems(), key=operator.itemgetter(1))[0],d_size)
+	move=inp_to_pos(max(tree.items(), key=operator.itemgetter(1))[0],d_size)
 	return move
 
 
