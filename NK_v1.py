@@ -106,6 +106,20 @@ def strategy_random(d_board, d_size):
 	random.shuffle(d_available_pos)
 	return d_available_pos[0]
 
+def look_around_track_red(pos,d_board,d_size,red_list):
+	red_list.append(pos)
+	i=pos[0]
+	j=pos[1]
+	#look around
+	for m in range(-1, 2):
+		for n in range(-1, 2):
+			if check_pos([i + m, j + n], d_size) and [i + m, j + n] != [i, j]:
+				#if find new red then expand
+				if [i + m,j + n] not in red_list and d_board[i + m][j + n] == VALUE_RED:
+					look_around_track_red(pos, d_board, d_size, red_list)
+	return red_list
+
+
 
 def evaluate_r_hscore(d_board,d_size):
 	# go through all board
@@ -113,21 +127,28 @@ def evaluate_r_hscore(d_board,d_size):
 	d_con_score=0
 	p_con_score=0
 	emp_score=0
+	hori_span=[]
 	for i in range(0,d_size):
 		for j in range(0,d_size):
 			if d_board[i][j]==VALUE_RED:
+				red_list=[]
+				look_around_track_red([i,j],d_board,d_size,red_list).sort(key=lambda x: x[1])
+
+				hori_span.append(abs(red_list[0][1]-red_list[-1][1]))
 				#check local connectivity
 				for m in range(-1,2):
 					for n in range(-1,2):
 						if check_pos([i+m,j+n], d_size) and [i+m,j+n]!=[i,j]:
 							if d_board[i+m][j+n] == VALUE_RED:
 								d_con_score+=1
+
 							if d_board[i + m][j + n] == VALUE_EMPTY:
 								emp_score+=1
 								if check_pos([i + 2*m, j + 2*n], d_size):
 									if d_board[i + 2*m][j + 2*n] == VALUE_RED:
 										p_con_score += 1
-	h_score=10*d_con_score+3*p_con_score+emp_score
+	hori_score=max(hori_span)
+	h_score=10*d_con_score+3*p_con_score+emp_score+100*hori_score
 	return h_score
 
 def make_r_move(d_board,d_size,d_available_pos):
