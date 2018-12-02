@@ -108,6 +108,7 @@ def strategy_random(d_board, d_size):
 
 def look_around_track_red(pos,d_board,d_size,red_list):
 	red_list.append(pos)
+
 	i=pos[0]
 	j=pos[1]
 	#look around
@@ -115,9 +116,9 @@ def look_around_track_red(pos,d_board,d_size,red_list):
 		for n in range(-1, 2):
 			if check_pos([i + m, j + n], d_size) and [i + m, j + n] != [i, j]:
 				#if find new red then expand
-				if [i + m,j + n] not in red_list and d_board[i + m][j + n] == VALUE_RED:
+				if [(i + m),(j + n)] not in red_list and d_board[i + m][j + n] == VALUE_RED:
 					look_around_track_red(pos, d_board, d_size, red_list)
-	return red_list
+
 
 
 
@@ -132,7 +133,8 @@ def evaluate_r_hscore(d_board,d_size):
 		for j in range(0,d_size):
 			if d_board[i][j]==VALUE_RED:
 				red_list=[]
-				look_around_track_red([i,j],d_board,d_size,red_list).sort(key=lambda x: x[1])
+				look_around_track_red([i,j],d_board,d_size,red_list)
+				red_list.sort(key=lambda x: x[1])
 
 				hori_span.append(abs(red_list[0][1]-red_list[-1][1]))
 				#check local connectivity
