@@ -14,6 +14,7 @@ from __future__ import print_function
 import operator
 import sys
 import time
+from copy import copy, deepcopy
 import getopt
 import random
 
@@ -133,7 +134,7 @@ def make_r_move(d_board,d_size,d_available_pos):
 	tree={}
 	for d_pos1 in d_available_pos:
 		#make_move & update board
-		m1_d_board=d_board[:]
+		m1_d_board=deepcopy(d_board)
 		m1_d_board[d_pos1[0]][d_pos1[1]]=VALUE_RED
 		#create second movable list
 		d_available_pos_2=d_available_pos[:]
@@ -141,7 +142,7 @@ def make_r_move(d_board,d_size,d_available_pos):
 		score_list=[]
 		for d_pos2 in d_available_pos_2:
 			#make_move update board
-			m2_d_board = m1_d_board[:]
+			m2_d_board = deepcopy(m1_d_board)
 			m2_d_board[d_pos2[0]][d_pos2[1]] = VALUE_BLUE
 			#evalutate score & add node to tree
 			score_list.append(evaluate_r_hscore(m2_d_board,d_size))

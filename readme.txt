@@ -34,7 +34,7 @@ HexReferee [--debug] --red=<red_executable> --blue=<blue_executable> --size=<boa
 -s, --size: (default: 7) specify the size of game board, should be integer in [1,26]
 
 Execution Examples (assume all files are in current directory):
-./HexReferee -r ./RandomHexExecutable.sh -b ./RandomHexExecutable.sh -s 11 # let the RandomHex program plays with itself on a board of size 11
+./HexReferee -r ./RandomHexExecutable.sh -b ./RandomHexExecutable.sh -s 11# let the RandomHex program plays with itself on a board of size 11
 ./HexReferee -d -r ./MinimaxHexExecutable.sh -b ./RandomHexExecutable.sh -s 7 # let two different programs play with each other, with debug mode enabled
 
 [IMPORTANT NOTICE]: Currently HexReferee can ONLY be executed on CSIL machines. Use the scp command to upload the HexReferee program to your CSIL machine, or get the latest HexReferee program from the MP website by typing the command in terminal:
