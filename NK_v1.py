@@ -113,9 +113,9 @@ def look_around_track_red(pos,d_board,d_size,red_list):
 	#look around
 	for m in range(-1, 2):
 		for n in range(-1, 2):
-			if check_pos([i + m, j + n], d_size) and [i + m, j + n] != [i, j] and (d_board[i + m][j + n] == VALUE_RED):
+			if check_pos([i + m, j + n], d_size) and [i + m, j + n] != [i, j] and m*n>=0:
 				#if find new red then expand
-				if ([i + m,j + n] not in red_list):
+				if ([i + m,j + n] not in red_list) and (d_board[i + m][j + n] == VALUE_RED):
 					look_around_track_red([i + m,j + n], d_board, d_size, red_list)
 
 
@@ -147,7 +147,7 @@ def evaluate_r_hscore(d_board,d_size):
 				#check local connectivity
 				for m in range(-1,2):
 					for n in range(-1,2):
-						if check_pos([i+m,j+n], d_size) and [i+m,j+n]!=[i,j]:
+						if check_pos([i+m,j+n], d_size) and [i+m,j+n]!=[i,j] and m*n >= 0:
 							if d_board[i+m][j+n] == VALUE_RED:
 								d_con_score+=1
 
