@@ -165,7 +165,7 @@ def evaluate_b_hscore(d_board,d_size):
 									if d_board[i + 2*m][j + 2*n] == VALUE_BLUE:
 										p_con_score += 1
 	vert_score=max(vert_span)
-	h_score=20*d_con_score+5*p_con_score+20*emp_score+100*vert_score
+	h_score=30*d_con_score+30*p_con_score+10*emp_score+100*vert_score
 	return h_score
 
 def evaluate_r_hscore(d_board,d_size):
@@ -203,7 +203,7 @@ def evaluate_r_hscore(d_board,d_size):
 									if d_board[i + 2*m][j + 2*n] == VALUE_RED:
 										p_con_score += 1
 	hori_score=max(hori_span)
-	h_score=20*d_con_score+5*p_con_score+20*emp_score+100*hori_score
+	h_score=30*d_con_score+30*p_con_score+10*emp_score+100*hori_score
 	return h_score
 
 def make_r_move(d_board,d_size,d_available_pos):
@@ -250,7 +250,7 @@ def make_b_move(d_board,d_size,d_available_pos):
 	move=inp_to_pos(max(tree.items(), key=operator.itemgetter(1))[0],d_size)
 	return move
 
-def strategy_NK_v1(d_board, d_size):
+def strategy_NK_v1(d_board, d_size,arg_player):
 	# search for empty position
 	d_available_pos = []
 	for i in range(d_size):
@@ -331,7 +331,7 @@ def main(argv):
 		if arg_player=="RED":
 			# RED playes first
 			#c_pos = strategy_random(hex_board, arg_size)
-			c_pos = strategy_NK_v1(hex_board, arg_size)
+			c_pos = strategy_NK_v1(hex_board, arg_size,arg_player)
 			c_inp = pos_to_inp(c_pos, arg_size)
 			# introduce random time pause
 			# time.sleep(random.randint(0,4))
@@ -347,7 +347,7 @@ def main(argv):
 
 		if arg_player=="BLUE":
 			# BLUE playes
-			c_pos = strategy_NK_v1(hex_board, arg_size)
+			c_pos = strategy_NK_v1(hex_board, arg_size,arg_player)
 			c_inp = pos_to_inp(c_pos, arg_size)
 			# introduce random time pause
 			# time.sleep(random.randint(0,4))
