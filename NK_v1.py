@@ -136,11 +136,13 @@ def evaluate_b_hscore(d_board,d_size):
 	d_con_score=0
 	p_con_score=0
 	emp_score=0
+	far_score=0
 	vert_span=[]
 	checked_blue=[]
 	for i in range(0,d_size):
 		for j in range(0,d_size):
 			if d_board[i][j]==VALUE_BLUE:
+				far_score+=abs(d_size/2-i)
 				#check connecting component length
 				if [i,j] not in checked_blue:
 					checked_blue.append([i,j])
@@ -165,7 +167,7 @@ def evaluate_b_hscore(d_board,d_size):
 									if d_board[i + 2*m][j + 2*n] == VALUE_BLUE:
 										p_con_score += 1
 	vert_score=max(vert_span)
-	h_score=30*d_con_score+30*p_con_score+10*emp_score+100*vert_score
+	h_score=30*d_con_score+30*p_con_score+10*emp_score+100*vert_score+15*far_score
 	return h_score
 
 def evaluate_r_hscore(d_board,d_size):
@@ -174,11 +176,13 @@ def evaluate_r_hscore(d_board,d_size):
 	d_con_score=0
 	p_con_score=0
 	emp_score=0
+	far_score=0
 	hori_span=[]
 	checked_red=[]
 	for i in range(0,d_size):
 		for j in range(0,d_size):
 			if d_board[i][j]==VALUE_RED:
+				far_score += abs(d_size / 2 - j)
 				#check connecting component length
 				if [i,j] not in checked_red:
 					checked_red.append([i,j])
@@ -203,7 +207,7 @@ def evaluate_r_hscore(d_board,d_size):
 									if d_board[i + 2*m][j + 2*n] == VALUE_RED:
 										p_con_score += 1
 	hori_score=max(hori_span)
-	h_score=30*d_con_score+30*p_con_score+10*emp_score+100*hori_score
+	h_score=30*d_con_score+30*p_con_score+10*emp_score+100*hori_score+15*far_score
 	return h_score
 
 def make_r_move(d_board,d_size,d_available_pos):
