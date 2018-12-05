@@ -167,7 +167,7 @@ def evaluate_b_hscore(d_board,d_size):
 									if d_board[i + 2*m][j + 2*n] == VALUE_BLUE:
 										p_con_score += 1
 	vert_score=max(vert_span)
-	h_score=30*d_con_score+30*p_con_score+10*emp_score+100*vert_score+15*far_score
+	h_score=30*d_con_score+30*p_con_score+10*emp_score+100000*vert_score+1*far_score
 	return h_score
 
 def evaluate_r_hscore(d_board,d_size):
@@ -207,7 +207,7 @@ def evaluate_r_hscore(d_board,d_size):
 									if d_board[i + 2*m][j + 2*n] == VALUE_RED:
 										p_con_score += 1
 	hori_score=max(hori_span)
-	h_score=30*d_con_score+30*p_con_score+10*emp_score+100*hori_score+15*far_score
+	h_score=30*d_con_score+30*p_con_score+10*emp_score+100000*hori_score+1*far_score
 	return h_score
 
 def make_r_move(d_board,d_size,d_available_pos):
