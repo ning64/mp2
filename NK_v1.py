@@ -118,9 +118,55 @@ def look_around_track_red(pos,d_board,d_size,red_list):
 				if ([i + m,j + n] not in red_list) and (d_board[i + m][j + n] == VALUE_RED):
 					look_around_track_red([i + m,j + n], d_board, d_size, red_list)
 
+def look_around_track_blue(pos,d_board,d_size,blue_list):
+	blue_list.append(pos)
+	i=pos[0]
+	j=pos[1]
+	#look around
+	for m in range(-1, 2):
+		for n in range(-1, 2):
+			if check_pos([i + m, j + n], d_size) and [i + m, j + n] != [i, j] and m*n>=0:
+				#if find new red then expand
+				if ([i + m,j + n] not in blue_list) and (d_board[i + m][j + n] == VALUE_BLUE):
+					look_around_track_blue([i + m,j + n], d_board, d_size, blue_list)
 
+def evaluate_b_hscore(d_board,d_size):
+	# go through all board
+	# each r block, check 8 surr for d_connection, if empty check for potential_connection
+	d_con_score=0
+	p_con_score=0
+	emp_score=0
+	vert_span=[]
+	checked_blue=[]
+	for i in range(0,d_size):
+		for j in range(0,d_size):
+			if d_board[i][j]==VALUE_BLUE:
+				#check connecting component length
+				if [i,j] not in checked_blue:
+					checked_blue.append([i,j])
+					blue_list=[]
+					look_around_track_blue([i,j],d_board,d_size,blue_list)
+					blue_list.sort(key=lambda x: x[0])
 
+					for blue in blue_list:
+						if blue not in checked_blue:
+							checked_blue.append(blue)
+					vert_span.append(abs(blue_list[0][0]-blue_list[-1][0]))
+				#check local connectivity
+				for m in range(-1,2):
+					for n in range(-1,2):
+						if check_pos([i+m,j+n], d_size) and [i+m,j+n]!=[i,j] and m*n >= 0:
+							if d_board[i+m][j+n] == VALUE_BLUE:
+								d_con_score+=1
 
+							if d_board[i + m][j + n] == VALUE_EMPTY:
+								emp_score+=1
+								if check_pos([i + 2*m, j + 2*n], d_size):
+									if d_board[i + 2*m][j + 2*n] == VALUE_BLUE:
+										p_con_score += 1
+	vert_score=max(vert_span)
+	h_score=20*d_con_score+5*p_con_score+20*emp_score+100*vert_score
+	return h_score
 
 def evaluate_r_hscore(d_board,d_size):
 	# go through all board
@@ -182,6 +228,27 @@ def make_r_move(d_board,d_size,d_available_pos):
 	move=inp_to_pos(max(tree.items(), key=operator.itemgetter(1))[0],d_size)
 	return move
 
+def make_b_move(d_board,d_size,d_available_pos):
+	tree={}
+	for d_pos1 in d_available_pos:
+		#make_move & update board
+		m1_d_board=deepcopy(d_board)
+		m1_d_board[d_pos1[0]][d_pos1[1]]=VALUE_BLUE
+		#create second movable list
+		d_available_pos_2=d_available_pos[:]
+		d_available_pos_2.remove(d_pos1)
+		score_list=[]
+		for d_pos2 in d_available_pos_2:
+			#make_move update board
+			m2_d_board = deepcopy(m1_d_board)
+			m2_d_board[d_pos2[0]][d_pos2[1]] = VALUE_RED
+			#evalutate score & add node to tree
+			score_list.append(evaluate_b_hscore(m2_d_board,d_size))
+		#do min
+		tree[pos_to_inp(d_pos1, d_size)]=min(score_list)
+	#do max
+	move=inp_to_pos(max(tree.items(), key=operator.itemgetter(1))[0],d_size)
+	return move
 
 def strategy_NK_v1(d_board, d_size):
 	# search for empty position
@@ -195,7 +262,10 @@ def strategy_NK_v1(d_board, d_size):
 		# print("# Game Over.")
 		sys.exit(0)
 	# randomized
-	move=make_r_move(d_board,d_size,d_available_pos)
+	if arg_player == "RED":
+		move=make_r_move(d_board,d_size,d_available_pos)
+	elif arg_player == "BLUE":
+		move = make_b_move(d_board, d_size, d_available_pos)
 	return move
 
 def print_board(d_board, d_size):
@@ -277,7 +347,7 @@ def main(argv):
 
 		if arg_player=="BLUE":
 			# BLUE playes
-			c_pos = strategy_random(hex_board, arg_size)
+			c_pos = strategy_NK_v1(hex_board, arg_size)
 			c_inp = pos_to_inp(c_pos, arg_size)
 			# introduce random time pause
 			# time.sleep(random.randint(0,4))
