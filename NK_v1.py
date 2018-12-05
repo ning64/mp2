@@ -157,7 +157,7 @@ def evaluate_r_hscore(d_board,d_size):
 									if d_board[i + 2*m][j + 2*n] == VALUE_RED:
 										p_con_score += 1
 	hori_score=max(hori_span)
-	h_score=10*d_con_score+3*p_con_score+emp_score+100*hori_score
+	h_score=20*d_con_score+5*p_con_score+20*emp_score+100*hori_score
 	return h_score
 
 def make_r_move(d_board,d_size,d_available_pos):
